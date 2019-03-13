@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { 
+      	font-family: 'Ubuntu Mono'; 
+      	background-color: #F0F0F0;
+      	color: #444;
+      	padding-left: 0.5em;
+      	padding-right: 0.5em;
+      	padding-top: 0.1em;
+      	padding-bottom: 0.1em;
+      }
+      
+      h1 {
+      	margin-top: 0.3em;
+      }
+      
+	  ul li {
+        margin-bottom: 1em;
+        line-height: 1.2;
+      }
+	    
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+# Agenda
+
+* Git in general
+* Working with local and remote branches
+* Branching and related best practices
+* Rebases/Merges
+* Conflict resolving
+* Stashing
+* .gitconfig
+
+**ASK QUESTIONS ANYTIME**
+
+---
+
+# Git in general
+
+* Distributed Version Control System
+* Successor of CSV, Subversion and inspired by closed source Bitkeeper
+* Easier to work with as a team than predecessors
+* Originally made by Linus Torvalds to improve Linux Kernel development 
+* Nowadays embraced even by Microsoft
+* `Github !== Git`
+
+## Github
+
+* SaaS-service for hosting Git repositories and related tools
+* Bitbucket
+* Gitlab
+* Host your own :)
+
+---
+
+## What the name means:
+
+* random three-letter combination that is pronounceable, and not actually used by any common UNIX command. The fact that it is a mispronunciation of "get" may or may not be relevant.
+* stupid. contemptible and despicable. simple. Take your pick from the dictionary of slang.
+* "global information tracker": you're in a good mood, and it actually works for you. Angels sing, and a light suddenly fills the room.
+* "goddamn idiotic truckload of sh*t": when it breaks
+
+---
+
+# How to start
+
+* Get Git magically to your computer. (Ubuntu: `apt install git`, Mac: Install Xcode, Windows install Git from the official site)
+* Don't use GUIs, use git CLI. _(exception: Use PHPStorm for conflict resolving)._
+* Sooner or later you'll face problems that force you to CLI anyway.
+
+## Git init
+
+* To create new _local_ repository: 
+```bash 
+mkdir project-folder
+cd project-folder
+git init
+nano .gitignore
+```
+
+---
+
+## Remote repository
+
+* Create new repo in Github
+* Push your repo to Github (don't worry too much, Github will tell you what to do):
+```bash
+git remote add origin git@github.com:trm42/test-repo.git
+git push -u origin master
+```
+
+---
+
+# Git clone
+
+* Use ssh as protocol
+* ssh-keygen, copy the $HOME/.ssh/id*.pub keyfile content to Github
+* ^ don't add password to that key as that will hinder your workflow
+* **Never send / publish the non public keyfile anywhere**
+
+```bash
+git clone git@github.com:trm42/test-repo.git [directory to clone into]
+```
+
+---
+
+# Git log
+
+* Tells the whole commit history
+* `git log filename` tells what commits have touched the file
+* Prettier and easier to read: 
+
+```
+git log --color --graph --pretty=format:\'%Cred%h%Creset -%C(yellow)%d%Creset %s 
+%Cgreen(%cr) %C(bold blue)<%an>%Creset\' --abbrev-commit
+```
+
+---
+
+# Git blame
+
+* Does what the name says
+* `git blame FILENAME`
+* Who has modified the file and what lines and in what commit
+
+---
+
+
+# Git branch
+
+* List branches and see current: `git branch`
+* Create Branch: `git checkout -b BRANCH_NAME`. Make sure you're branching from right branch!
+* Checkout a branch: `git checkout EXISTING_BRANCH_NAME`
+* Pull latest changes from upstream: `git pull`
+* Rename local branch : `git branch -m NEW_BRANCH_NAME`
+* delete: `git branch -D DELETABLE_BRANCH_NAME`
+
+---
+
+# Branching strategies 
+
+* One feature per branch 
+* Sensible units of work
+* Avoid mega branches
+
+
+## Bigger set of features:
+
+* Make feature set main branch. Example: `UK-2021-new-invoice-process`
+* Make every feature as a separate feature/task branch, make PRs for them and merge to feature set branch
+* `UK-2022-send-invoices-to-ireland`
+* `UK-2023-fix-devil-signs-invoices`
+* `UK-2024-revert-who-creates-these-prs-fix-this-bleeep`
+
+---
+
+# Branch naming
+
+* Feature branches `UK-123-fix-brainfarts`
+* Add descriptive verb after ticket number: `fix, hotfix, change, delete, add`
+
+## Branches
+
+* Develop === For long term development projects
+* Release candidate / Staging  === Last fortress before master. Deployed to staging envs
+* Master === Production branch. Everything merged here gets deployed to production
+
+---
+
+# Git stage
+
+* Stage of changed files
+* `git status`
+* Normal usage `git add FILES OR DIRECTORIES`
+* `git add -p` goes through all changes and offers them separately to be added
+* **Avoid** `git add .` Use bash completion if it makes life easier
+* To take files off from stage `git reset FILES OR DIRECTORIES`  
+* To reset files to their pre-modified state `git checkout FILE OR DIRECTORIES`
+
+---
+
+# Git commit 
+
+* Adds your staged changes to your local version history
+* Create good commit messages
+* Actually describe **what** you have done and **WHY**
+* `git commit` Opens defined $EDITOR for writing the commit message. 
+* `git commit -m "Fix brainfart und wolf because... OMAGOD WE'RE ALL GOING TO DIE"`
+* `git commit -m "Fix annoying bug that breaks things In FoobarController as bars were running out " --amend` (works only before push)
+
+---
+
+## Suggestions for possible commit rules
+
+1. Separate subject from body with a blank line
+2. Limit the subject line to 50 characters
+3. Capitalize the subject line
+4. Do not end the subject line with a period
+5. Use the imperative mood in the subject line
+6. Wrap the body at 72 characters
+7. Use the body to explain what and why vs. how
+
+## Short Examples
+
+* `Move composer.json require-dev doctrine/dbal to require as it is needed in staging and prod as they do only composer install --no-dev as they are supposed to be doing`
+* `Delete all validation lang files because translations are responsibility of the frontends`
+* `Fixing fix of the fix of the fix`
+* `Fixing brainfarty blob of blob`
+
+---
+
+## Long Commit Message Example
+
+Longer read: https://chris.beams.io/posts/git-commit/
+
+Summarize changes in around 50 characters or less
+
+More detailed explanatory text, if necessary. Wrap it to about 72
+characters or so. In some contexts, the first line is treated as the
+subject of the commit and the rest of the text as the body. The
+blank line separating the summary from the body is critical (unless
+you omit the body entirely); various tools like `log`, `shortlog`
+and `rebase` can get confused if you run the two together.
+
+Explain the problem that this commit is solving. Focus on why you
+are making this change as opposed to how (the code explains that).
+Are there side effects or other unintuitive consequences of this
+change? Here's the place to explain them.
+
+Further paragraphs come after blank lines.
+
+ - Bullet points are okay, too
+ - Typically a hyphen or asterisk is used for the bullet, preceded
+   by a single space, with blank lines in between, but conventions
+   vary here
+
+If you use an issue tracker, put references to them at the bottom,
+like this:
+
+Resolves: #123
+See also: #456, #789
+
+---
+
+# Git push
+
+* Pushes changes to upstream (Github or Bitbucket repository)
+* Usually straightforward when the upstream branch has been set (`git push --set-upstream origin UK-123`)
+* If you're creating a new pull request, remember to go to Github and create the PR :)
+* After rebase: `git push --force` so the git PR history gets back to normal
+* Don't push to branches which have been already merged
+
+# Git pull
+
+* Usually nothing special although may induce git merge if the local and upstream has different commits
+* In that case `git merge abort` may be good idea...
+
+---
+
+# Git diff
+
+* `git diff -r BRANCH OR GIT COMMIT HASH`
+* Diffmerge and diff-so-fancy makes life more fun <3 
+
+---
+
+# Merge vs Rebase?
+
+https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+* Merging is non-destructive. Just a new merge commit down the line
+
+## Merge
+
+* Good for merging branches into mainline. That's how Github does it
+* Bad for keeping Git log understandable in the long run
+
+---
+
+## Rebase
+
+* Old commits are put below the new commits -> linear commit log
+* Not for public branches (master, release candidate) without coordination
+* Requires force push
+* If working in a branch for more than one day, one should rebase the branch quite often when starting the work, helps to see possible problems earlier
+* Git rerere (if you need to resolve same stuff multiple times, this is a life saver <3 )
+* `git rebase origin/release-candidate`
+* `git rebase --continue`
+* `git rebase --skip`
+* `git rebase --abort`
+
+* Rebase order matters. UK-114 -> UK->113 -> UK->82 -> Release Candidate
+
+---
+
+## Conflict resolve
+
+* PHPStorm's conflict resolve is awesome. Use that.
+* Automatic resolve is good for most changes, concentrate on conflicts.
+
+---
+
+# Github workflow
+
+* `git checkout release-candidate`
+* `git pull`
+* `git branch -b UK-999-remove-brainfarts`
+* Lots of `git commit`s
+* `git push --set-upstream origin UK-999-remove-brainfarts`
+* Head to Github and create pull request
+* Pester others until they make CRs
+* Fix CR stuff
+* Commit and Push
+* Wait for approval
+* (rebase + push --force if needed)
+* Merge to RC
+
+---
+
+# Git stash
+
+* Helps with uncommitted work when you don't want to commit them yet but need to change branch temporarily
+* Literally stashes your work away
+
+* `git stash`
+* `git stash list`
+* `git stash apply STASH_NUMBER`
+
+---
+
+# GURU Stuff
+
+* ~/.gitconfig (shortcuts, rerere)
+* https://github.com/so-fancy/diff-so-fancy
+* https://github.com/michaeldfallen/git-radar
+* https://www.youtube.com/watch?v=duqBHik7nRo
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
