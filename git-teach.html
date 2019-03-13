@@ -79,7 +79,7 @@
 # How to start
 
 * Get Git magically to your computer. (Ubuntu: `apt install git`, Mac: Install Xcode, Windows install Git from the official site)
-* Don't use GUIs, use git CLI. _(exception: Use PHPStorm for conflict resolving)._
+* Avoid GUIs, prefer command line Git. _(exception: Use PHPStorm/VSCode for conflict resolving)._
 * Sooner or later you'll face problems that force you to CLI anyway.
 
 ## Git init
@@ -114,7 +114,7 @@ git push -u origin master
 * **Never send / publish the non public keyfile anywhere**
 
 ```bash
-git clone git@github.com:trm42/test-repo.git [directory to clone into]
+git clone git@github.com:trm42/test-repo.git [DIRECTORY TO CLONE INTO]
 ```
 
 ---
@@ -126,8 +126,8 @@ git clone git@github.com:trm42/test-repo.git [directory to clone into]
 * Prettier and easier to read: 
 
 ```
-git log --color --graph --pretty=format:\'%Cred%h%Creset -%C(yellow)%d%Creset %s 
-%Cgreen(%cr) %C(bold blue)<%an>%Creset\' --abbrev-commit
+git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s 
+%Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 ```
 
 ---
@@ -144,7 +144,8 @@ git log --color --graph --pretty=format:\'%Cred%h%Creset -%C(yellow)%d%Creset %s
 # Git branch
 
 * List branches and see current: `git branch`
-* Create Branch: `git checkout -b BRANCH_NAME`. Make sure you're branching from right branch!
+* Make sure you're branching from right branch first: `git checkout release-candidate`
+* Create Branch: `git checkout -b BRANCH_NAME`.
 * Checkout a branch: `git checkout EXISTING_BRANCH_NAME`
 * Pull latest changes from upstream: `git pull`
 * Rename local branch : `git branch -m NEW_BRANCH_NAME`
@@ -156,7 +157,7 @@ git log --color --graph --pretty=format:\'%Cred%h%Creset -%C(yellow)%d%Creset %s
 
 * One feature per branch 
 * Sensible units of work
-* Avoid mega branches
+* Avoid **MEGA GODZILLA** branches
 
 
 ## Bigger set of features:
@@ -296,6 +297,45 @@ See also: #456, #789
 * (rebase + push --force if needed)
 * Merge to RC (Deployment to Staging etc)
 * RC gets merged to Master (Deployment to Production)
+
+---
+
+# Pull Requests and Code Reviews
+
+* Branch -> Pull Request -> Code Review -> Fix -> Code Review -> Merge
+* _Everybody's_ code needs to be reviewed
+* Everybody needs to do code reviews. It doesn't belong Somebody Else's Problem field
+* Functions as QA Sanity check
+* Two pairs of fresh eyes finds funny things <3
+* Accidental Errors
+* Structural Errors
+* Distributes knowledge about what has been done and why
+* Makes codebase more consistent
+* Reviewers can learn new 
+* Shorter PRs are easier to review
+* Take your time
+
+---
+
+## Things to note when doing CR
+
+* Does the code do what task defines?
+* Is there something to refactor or abstract?
+* Possible security or privacy implications
+* Does the code reimplement already existing functionality?
+* Best Practices?
+* No commented code
+* Is there a possibility of unintentended and undocumented breaking change?
+
+---
+
+## Keywords for CR:
+
+* Suggestion
+* Fix
+* Question
+
+More about Code review best practices https://medium.com/palantir/code-review-best-practices-19e02780015f
 
 ---
 
