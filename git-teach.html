@@ -60,6 +60,8 @@
 * Nowadays embraced even by Microsoft
 * `Github !== Git`
 
+* Git **is not infallible**. It offloads hard problems to _you_
+
 ## Github
 
 * SaaS-service for hosting Git repositories and related tools
@@ -184,10 +186,13 @@ git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s
 
 ---
 
-# Git stage
+# Git stage 1/3
 
 * Stage of changed files
 * `git status`
+
+## Git add
+
 * Normal usage `git add FILES OR DIRECTORIES`
 * Creates SHA hash for your file 
 * `git add -p` goes through all changes and offers them separately to be added
@@ -197,7 +202,17 @@ git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s
 
 ---
 
-# Git commit 
+# Git stage 2/3
+
+* `Git mv OLD_FILENAME NEW_FILENAME`
+* `Git rm UNNECESSARY_FILE`. Note: removes also the local version
+* `git rm --cached` don't remove local version
+
+---
+
+# Git stage 3/3
+
+## Git commit 
 
 * Adds your staged changes to your local version history
 * Create good commit messages
